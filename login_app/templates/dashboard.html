@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0f3460, #16213e);
+      color: #fff;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    h1 {
+      color: #0f3460;
+      font-size: 1.6rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .username { color: #e94560; font-weight: 700; }
+
+    p.sub {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-item {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .info-item .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #aaa;
+      margin-bottom: 0.3rem;
+    }
+
+    .info-item .value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0f3460;
+    }
+
+    .btn-logout {
+      display: inline-block;
+      padding: 0.7rem 2rem;
+      background: #e94560;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .btn-logout:hover { background: #c0392b; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar">👤</div>
+    <h1>Welcome, <span class="username">{{ username }}</span>!</h1>
+    <p class="sub">You are successfully logged in.</p>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Status</div>
+        <div class="value">✅ Active</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Role</div>
+        <div class="value">{{ "Admin" if username == "admin" else "User" }}</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Session</div>
+        <div class="value">🔒 Secure</div>
+      </div>
+      <div class="info-item">
+        <div class="label">App</div>
+        <div class="value">Python Flask</div>
+      </div>
+    </div>
+
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</body>
+</html>

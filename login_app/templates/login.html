@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .card h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #0f3460;
+      margin-bottom: 0.25rem;
+    }
+
+    .card .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #0f3460;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: #0f3460;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .btn:hover { background: #16213e; }
+
+    .error {
+      background: #ffeaea;
+      color: #c0392b;
+      border: 1px solid #f5c6cb;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-size: 0.88rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-top: 1.2rem;
+    }
+
+    .hint span { color: #0f3460; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔐 Login</h1>
+    <p class="subtitle">Enter your credentials to continue</p>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="error" style="background:#eafaf1;color:#1e8449;border-color:#c3e6cb;">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"
+               placeholder="Enter username" required autofocus />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Enter password" required />
+      </div>
+      <button type="submit" class="btn">Sign In</button>
+    </form>
+
+    <p class="hint">Demo — use <span>admin / admin123</span> or <span>user / password</span></p>
+  </div>
+</body>
+</html>
