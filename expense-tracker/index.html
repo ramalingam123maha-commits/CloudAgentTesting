@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fa-solid fa-wallet"></i>
+        <span>ExpenseTracker</span>
+      </div>
+      <button class="sidebar-close" id="sidebarClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <i class="fa-solid fa-gauge-high"></i><span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-page="transactions">
+        <i class="fa-solid fa-list-ul"></i><span>Transactions</span>
+      </a>
+      <a href="#" class="nav-item" data-page="analytics">
+        <i class="fa-solid fa-chart-pie"></i><span>Analytics</span>
+      </a>
+      <a href="#" class="nav-item" data-page="budget">
+        <i class="fa-solid fa-bullseye"></i><span>Budget Goals</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN WRAPPER ===== -->
+  <div class="main-wrapper">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <div class="topbar-actions">
+        <select id="monthFilter" class="month-filter">
+          <!-- Populated by JS -->
+        </select>
+        <button class="btn btn-primary" id="openAddModal">
+          <i class="fa-solid fa-plus"></i> Add Entry
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== PAGES ===== -->
+    <main class="content">
+
+      <!-- ── DASHBOARD PAGE ── -->
+      <section class="page active" id="page-dashboard">
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+          <div class="card summary-card balance">
+            <div class="card-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            <div class="card-info">
+              <span class="card-label">Net Balance</span>
+              <span class="card-value" id="totalBalance">$0.00</span>
+            </div>
+          </div>
+          <div class="card summary-card income">
+            <div class="card-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <div class="card-info">
+              <span class="card-label">Total Income</span>
+              <span class="card-value" id="totalIncome">$0.00</span>
+            </div>
+          </div>
+          <div class="card summary-card expense">
+            <div class="card-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+            <div class="card-info">
+              <span class="card-label">Total Expenses</span>
+              <span class="card-value" id="totalExpense">$0.00</span>
+            </div>
+          </div>
+          <div class="card summary-card savings">
+            <div class="card-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+            <div class="card-info">
+              <span class="card-label">Savings Rate</span>
+              <span class="card-value" id="savingsRate">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <div class="card chart-card">
+            <div class="card-header">
+              <h3>Monthly Overview</h3>
+              <span class="chart-subtitle" id="monthlySubtitle"></span>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="monthlyBarChart"></canvas>
+            </div>
+          </div>
+          <div class="card chart-card chart-card--sm">
+            <div class="card-header">
+              <h3>Expense Breakdown</h3>
+            </div>
+            <div class="chart-wrapper chart-wrapper--donut">
+              <canvas id="expensePieChart"></canvas>
+            </div>
+            <div id="pieNoData" class="no-data-msg hidden">No expense data</div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Transactions</h3>
+            <a href="#" class="view-all" data-page="transactions">View All</a>
+          </div>
+          <div class="tx-list" id="recentTxList">
+            <div class="empty-state">
+              <i class="fa-solid fa-receipt"></i>
+              <p>No transactions yet. Add one above!</p>
+            </div>
+          </div>
+        </div>
+
+      </section><!-- /dashboard -->
+
+      <!-- ── TRANSACTIONS PAGE ── -->
+      <section class="page" id="page-transactions">
+        <div class="card">
+          <div class="card-header filters-bar">
+            <h3>All Transactions</h3>
+            <div class="filter-controls">
+              <select id="filterType" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+              <select id="filterCategory" class="filter-select">
+                <option value="all">All Categories</option>
+              </select>
+              <input type="text" id="filterSearch" class="filter-input" placeholder="Search…" />
+            </div>
+          </div>
+
+          <div class="tx-table-wrapper">
+            <table class="tx-table" id="txTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Type</th>
+                  <th class="text-right">Amount</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="txTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+            <div class="empty-state hidden" id="txEmptyState">
+              <i class="fa-solid fa-filter-circle-xmark"></i>
+              <p>No transactions match your filters.</p>
+            </div>
+          </div>
+
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </section><!-- /transactions -->
+
+      <!-- ── ANALYTICS PAGE ── -->
+      <section class="page" id="page-analytics">
+
+        <!-- Year trend -->
+        <div class="card chart-card chart-card--full">
+          <div class="card-header">
+            <h3>12-Month Income vs Expenses</h3>
+          </div>
+          <div class="chart-wrapper chart-wrapper--tall">
+            <canvas id="trendLineChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Category breakdown table -->
+        <div class="charts-row">
+          <div class="card chart-card">
+            <div class="card-header">
+              <h3>Income by Category</h3>
+            </div>
+            <div class="chart-wrapper chart-wrapper--donut">
+              <canvas id="incomePieChart"></canvas>
+            </div>
+            <div id="incomePieNoData" class="no-data-msg hidden">No income data</div>
+          </div>
+          <div class="card chart-card">
+            <div class="card-header">
+              <h3>Expense by Category</h3>
+            </div>
+            <div class="chart-wrapper chart-wrapper--donut">
+              <canvas id="expensePieChart2"></canvas>
+            </div>
+            <div id="expensePieNoData" class="no-data-msg hidden">No expense data</div>
+          </div>
+        </div>
+
+        <!-- Category summary table -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Category Summary</h3>
+          </div>
+          <div class="cat-summary-grid" id="catSummaryGrid">
+          </div>
+        </div>
+
+      </section><!-- /analytics -->
+
+      <!-- ── BUDGET PAGE ── -->
+      <section class="page" id="page-budget">
+        <div class="card">
+          <div class="card-header">
+            <h3>Monthly Budget Goals</h3>
+            <button class="btn btn-secondary btn-sm" id="addBudgetGoal">
+              <i class="fa-solid fa-plus"></i> Add Goal
+            </button>
+          </div>
+          <div class="budget-list" id="budgetList">
+            <div class="empty-state" id="budgetEmptyState">
+              <i class="fa-solid fa-bullseye"></i>
+              <p>No budget goals set. Add your first goal!</p>
+            </div>
+          </div>
+        </div>
+      </section><!-- /budget -->
+
+    </main>
+  </div><!-- /main-wrapper -->
+
+  <!-- ===== ADD/EDIT TRANSACTION MODAL ===== -->
+  <div class="modal-overlay" id="txModalOverlay">
+    <div class="modal" id="txModal">
+      <div class="modal-header">
+        <h2 id="txModalTitle">Add Transaction</h2>
+        <button class="modal-close" id="txModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form class="modal-form" id="txForm" novalidate>
+        <input type="hidden" id="txId" />
+
+        <!-- Type toggle -->
+        <div class="type-toggle" id="typeToggle">
+          <button type="button" class="type-btn active" data-type="expense">
+            <i class="fa-solid fa-arrow-trend-down"></i> Expense
+          </button>
+          <button type="button" class="type-btn" data-type="income">
+            <i class="fa-solid fa-arrow-trend-up"></i> Income
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="txAmount">Amount *</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-dollar-sign input-icon"></i>
+              <input type="number" id="txAmount" min="0.01" step="0.01" placeholder="0.00" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="txDate">Date *</label>
+            <input type="date" id="txDate" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="txDescription">Description *</label>
+          <input type="text" id="txDescription" placeholder="e.g. Grocery shopping" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="txCategory">Category *</label>
+            <select id="txCategory" required>
+              <!-- Populated by JS based on type -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="txTags">Tags (optional)</label>
+            <input type="text" id="txTags" placeholder="e.g. work, personal" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="txNotes">Notes (optional)</label>
+          <textarea id="txNotes" rows="2" placeholder="Additional details…"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="txModalCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="txSaveBtn">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== ADD BUDGET GOAL MODAL ===== -->
+  <div class="modal-overlay" id="budgetModalOverlay">
+    <div class="modal modal--sm" id="budgetModal">
+      <div class="modal-header">
+        <h2>Set Budget Goal</h2>
+        <button class="modal-close" id="budgetModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form class="modal-form" id="budgetForm" novalidate>
+        <input type="hidden" id="budgetId" />
+        <div class="form-group">
+          <label for="budgetCategory">Category *</label>
+          <select id="budgetCategory" required>
+            <!-- Expense categories -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="budgetLimit">Monthly Limit ($) *</label>
+          <input type="number" id="budgetLimit" min="1" step="0.01" placeholder="0.00" required />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="budgetModalCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== DELETE CONFIRM MODAL ===== -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal modal--sm">
+      <div class="modal-header">
+        <h2>Delete Transaction</h2>
+        <button class="modal-close" id="deleteModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="deleteCancel">Cancel</button>
+        <button class="btn btn-danger" id="deleteConfirm">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
