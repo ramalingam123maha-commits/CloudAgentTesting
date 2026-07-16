@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Realtime Chat UI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Contacts list">
+      <header class="sidebar__header">
+        <h1>Chats</h1>
+        <button id="themeToggle" class="btn btn--ghost" aria-label="Toggle theme">🌗</button>
+      </header>
+      <div class="sidebar__search">
+        <input id="search" type="text" placeholder="Search contacts" aria-label="Search contacts" />
+      </div>
+      <ul id="contactList" class="contacts" role="listbox" aria-label="Contacts"></ul>
+      <footer class="sidebar__footer">
+        <button id="enableNotifs" class="btn btn--secondary">Enable notifications</button>
+      </footer>
+    </aside>
+
+    <main class="chat">
+      <header class="chat__header">
+        <div class="chat__header-info">
+          <div id="activeAvatar" class="avatar" aria-hidden="true"></div>
+          <div>
+            <h2 id="activeName">Select a contact</h2>
+            <div id="activeStatus" class="status">—</div>
+          </div>
+        </div>
+      </header>
+
+      <section id="messageList" class="messages" aria-live="polite" aria-label="Messages"></section>
+
+      <form id="messageForm" class="composer" autocomplete="off">
+        <input id="messageInput" type="text" placeholder="Type a message" aria-label="Type a message" disabled />
+        <button class="btn" type="submit" disabled>Send</button>
+      </form>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toasts" aria-live="assertive" aria-atomic="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
