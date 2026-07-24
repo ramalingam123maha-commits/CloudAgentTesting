@@ -1,13 +1,18 @@
+<!-- HTML shell for the Expense Tracker Vite/React app -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- SVG favicon defined in /public/favicon.svg -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Responsive viewport so the layout works on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>expense-tracker</title>
   </head>
   <body>
+    <!-- React mounts the entire application into this element -->
     <div id="root"></div>
+    <!-- Vite processes this ES-module entry point and injects the bundle -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

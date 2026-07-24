@@ -11,14 +11,17 @@ from rich import box
 
 from taskmanager.models import Priority, Status, Task
 
+# Shared console instance used by both this module and cli.py
 console = Console()
 
+# Maps each Status value to its Rich markup colour
 _STATUS_STYLE: dict[Status, str] = {
     Status.TODO: "yellow",
     Status.IN_PROGRESS: "cyan",
     Status.DONE: "green",
 }
 
+# Maps each Priority value to its Rich markup style
 _PRIORITY_STYLE: dict[Priority, str] = {
     Priority.LOW: "dim",
     Priority.MEDIUM: "white",
@@ -27,17 +30,20 @@ _PRIORITY_STYLE: dict[Priority, str] = {
 
 
 def _status_text(status: Status) -> str:
+    # Wrap the status label in its associated Rich colour markup
     style = _STATUS_STYLE[status]
     return f"[{style}]{status.value}[/{style}]"
 
 
 def _priority_text(priority: Priority) -> str:
+    # Wrap the priority label in its associated Rich style markup
     style = _PRIORITY_STYLE[priority]
     return f"[{style}]{priority.value}[/{style}]"
 
 
 def print_task_table(tasks: List[Task]) -> None:
     count = len(tasks)
+    # Build a rounded Rich table with a summary title showing the task count
     table = Table(
         box=box.ROUNDED,
         show_header=True,
@@ -51,6 +57,7 @@ def print_task_table(tasks: List[Task]) -> None:
     table.add_column("Due", justify="center")
 
     for task in tasks:
+        # Display an em-dash when no due date has been set
         due = task.due_date.strftime("%Y-%m-%d") if task.due_date else "—"
         table.add_row(
             task.id,
@@ -64,6 +71,7 @@ def print_task_table(tasks: List[Task]) -> None:
 
 
 def print_task_detail(task: Task) -> None:
+    # Fall back to a muted placeholder when no description was provided
     desc = task.description or "[dim]No description[/dim]"
     due = task.due_date.strftime("%Y-%m-%d %H:%M") if task.due_date else "—"
     body = (
@@ -75,4 +83,5 @@ def print_task_detail(task: Task) -> None:
         f"[bold]Created:[/bold]    {task.created_at.strftime('%Y-%m-%d %H:%M')}\n"
         f"[bold]Updated:[/bold]    {task.updated_at.strftime('%Y-%m-%d %H:%M')}"
     )
+    # Render the detail block inside a panel labelled with the task's short ID
     console.print(Panel(body, title=f"Task [dim]{task.id}[/dim]", expand=False))

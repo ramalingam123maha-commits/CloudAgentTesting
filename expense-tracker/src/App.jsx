@@ -1,3 +1,4 @@
+// Root application component – owns global state and composes all major sections
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, LayoutDashboard, Search } from 'lucide-react';
 import './index.css';
@@ -14,6 +15,7 @@ import CategoryChart from './components/CategoryChart.jsx';
 import MonthlyBarChart from './components/MonthlyBarChart.jsx';
 
 export default function App() {
+  // Pull CRUD helpers and the full transaction list from the custom hook
   const { transactions, addTransaction, deleteTransaction } = useTransactions();
 
   const [activeMonth, setActiveMonth] = useState(currentMonthKey);

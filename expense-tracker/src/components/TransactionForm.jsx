@@ -1,7 +1,9 @@
+// Controlled form for adding a new income or expense transaction
 import { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { CATEGORIES, currentMonthKey } from '../utils.js';
 
+// Blank form state; date defaults to today so the user rarely has to change it
 const defaultForm = {
   description: '',
   amount: '',
@@ -11,16 +13,21 @@ const defaultForm = {
 };
 
 export default function TransactionForm({ onAdd }) {
+  // Track whether the user is adding an expense or income
   const [type, setType] = useState('expense');
   const [form, setForm] = useState(defaultForm);
+  // Validation error message; empty string means no error
   const [error, setError] = useState('');
 
+  // Category list changes depending on the selected type
   const categories = CATEGORIES[type];
 
+  // Generic single-field updater so each input doesn't need its own handler
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   function handleSubmit(e) {
     e.preventDefault();
+    // Validate all required fields before calling the parent callback
     if (!form.description.trim()) { setError('Description is required.'); return; }
     if (!form.amount || isNaN(+form.amount) || +form.amount <= 0) { setError('Enter a valid positive amount.'); return; }
     if (!form.category) { setError('Please select a category.'); return; }
@@ -30,11 +37,13 @@ export default function TransactionForm({ onAdd }) {
     onAdd({
       type,
       description: form.description.trim(),
+      // Round to 2 decimal places to avoid floating-point surprises
       amount: parseFloat((+form.amount).toFixed(2)),
       category: form.category,
       date: form.date,
       note: form.note.trim(),
     });
+    // Reset form but keep today's date pre-filled for quick consecutive entries
     setForm({ ...defaultForm, date: new Date().toISOString().slice(0, 10) });
   }
 

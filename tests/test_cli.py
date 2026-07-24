@@ -8,12 +8,14 @@ from click.testing import CliRunner
 from taskmanager.cli import main
 
 
+# Fixture returns a (CliRunner, db_path_str) tuple so each test gets an isolated DB
 @pytest.fixture()
 def runner(tmp_path: Path):
     return CliRunner(), str(tmp_path / "tasks.json")
 
 
 def test_add_task(runner):
+    # Happy path: adding a task should exit cleanly and echo the title
     r, db = runner
     result = r.invoke(main, ["--db", db, "add", "Buy bread"])
     assert result.exit_code == 0
@@ -21,6 +23,7 @@ def test_add_task(runner):
 
 
 def test_add_task_with_priority(runner):
+    # Providing an explicit priority should still succeed
     r, db = runner
     result = r.invoke(main, ["--db", db, "add", "Do laundry", "-p", "high"])
     assert result.exit_code == 0
@@ -28,6 +31,7 @@ def test_add_task_with_priority(runner):
 
 
 def test_list_empty(runner):
+    # Listing against an empty DB should report 0 tasks and exit cleanly
     r, db = runner
     result = r.invoke(main, ["--db", db, "list"])
     assert result.exit_code == 0
@@ -35,6 +39,7 @@ def test_list_empty(runner):
 
 
 def test_list_after_add(runner):
+    # All previously added tasks should appear in the list output
     r, db = runner
     r.invoke(main, ["--db", db, "add", "Task A"])
     r.invoke(main, ["--db", db, "add", "Task B"])

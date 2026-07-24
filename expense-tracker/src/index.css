@@ -1,20 +1,28 @@
+/* Global reset – zero out browser default margins, paddings, and box model */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── Design tokens (CSS custom properties) ──────────────────────────────── */
 :root {
+  /* Background layers – darkest to lightest surface */
   --bg: #0f1117;
   --surface: #1a1d27;
   --surface2: #22263a;
   --border: #2e3247;
+  /* Text shades */
   --text: #e8eaf0;
   --text-muted: #8b90a7;
+  /* Semantic colours for income/expense indicators */
   --income: #22c55e;
   --expense: #ef4444;
+  /* Brand accent colour and its hover variant */
   --accent: #6366f1;
   --accent-hover: #4f46e5;
+  /* Shared border radius and drop-shadow for cards */
   --radius: 14px;
   --shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 
+/* Base body styles – dark background, Inter font, comfortable line height */
 body {
   background: var(--bg);
   color: var(--text);
@@ -24,12 +32,13 @@ body {
   line-height: 1.6;
 }
 
+/* Ensure the React root fills the full viewport height */
 #root { min-height: 100vh; }
 
-/* Scrollbar */
+/* Slim custom scrollbar to match the dark theme */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-/* Utility */
+/* Visually hidden but still accessible to screen readers */
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }

@@ -1,7 +1,9 @@
+// Scrollable list of transaction rows with delete support
 import { Trash2, TrendingUp, TrendingDown, Inbox } from 'lucide-react';
 import { getCategoryMeta, formatCurrency, formatDate } from '../utils.js';
 
 export default function TransactionList({ transactions, onDelete }) {
+  // Show a friendly empty state when there are no matching transactions
   if (transactions.length === 0) {
     return (
       <div className="empty-state">

@@ -1,17 +1,22 @@
+// Doughnut chart that breaks down the current month's expenses by category
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getCategoryMeta, formatCurrency, CHART_COLORS } from '../utils.js';
 
+// Register the required Chart.js components for a doughnut chart
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function CategoryChart({ transactions }) {
+  // Only expenses are relevant for this chart
   const expenseTxs = transactions.filter(t => t.type === 'expense');
 
+  // Aggregate total spend per category id
   const totals = expenseTxs.reduce((acc, t) => {
     acc[t.category] = (acc[t.category] || 0) + t.amount;
     return acc;
   }, {});
 
+  // Sort categories from highest to lowest spend so the chart reads naturally
   const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
 
   if (entries.length === 0) {

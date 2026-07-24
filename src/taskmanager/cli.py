@@ -63,6 +63,7 @@ def add(
     storage: TaskStorage = ctx.obj["storage"]
     due_dt = None
     if due:
+        # Accept any human-readable date string (e.g. "tomorrow", "2024-12-31")
         try:
             due_dt = parse_date(due)
         except Exception:

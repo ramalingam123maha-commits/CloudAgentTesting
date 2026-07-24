@@ -39,27 +39,34 @@ export const CHART_COLORS = [
 ];
 
 // ── Formatting ────────────────────────────────────────
+// Reuse a single Intl formatter instance for performance
 const USD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
+// Format a numeric value as a USD currency string (e.g. 1234.5 → "$1,234.50")
 export const formatCurrency = v => USD.format(v);
 
+// Format a "YYYY-MM-DD" date string as a human-readable locale string (e.g. "Jun 1, 2024")
 export const formatDate = dateStr => {
   const [y, m, d] = dateStr.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 // ── Month Utilities ───────────────────────────────────
+// Extract the "YYYY-MM" portion from a full date string
 export const monthKey = dateStr => dateStr.slice(0, 7);   // "2024-06"
 
+// Returns the "YYYY-MM" key for the current calendar month
 export const currentMonthKey = () => {
   const n = new Date();
   return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`;
 };
 
+// Convert a "YYYY-MM" key to a human-readable label (e.g. "June 2024")
 export const monthLabel = key => {
   const [y, m] = key.split('-').map(Number);
   return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 };
 
+// Offset a "YYYY-MM" key by `delta` months and return the resulting key
 export const addMonths = (key, delta) => {
   const [y, m] = key.split('-').map(Number);
   const d = new Date(y, m - 1 + delta, 1);

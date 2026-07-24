@@ -49,6 +49,7 @@ function seedDemoData() {
 }
 
 export function useTransactions() {
+  // Initialise from localStorage; seed demo data when the store is empty
   const [transactions, setTransactions] = useState(() => {
     const stored = loadFromStorage();
     if (stored.length === 0) {
@@ -59,14 +60,17 @@ export function useTransactions() {
     return stored;
   });
 
+  // Persist every state update back to localStorage
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions)); } catch {}
   }, [transactions]);
 
+  // Prepend a new transaction with a generated ID to keep the list in reverse-chronological order
   function addTransaction(data) {
     setTransactions(prev => [{ ...data, id: genId() }, ...prev]);
   }
 
+  // Remove a single transaction by its ID
   function deleteTransaction(id) {
     setTransactions(prev => prev.filter(t => t.id !== id));
   }

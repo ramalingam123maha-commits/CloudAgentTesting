@@ -1,11 +1,14 @@
+// Three-card banner showing net balance, total income, and total expenses for the active month
 import { formatCurrency } from '../utils.js';
 import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
 
 export default function SummaryBanner({ transactions, monthLabel }) {
+  // Derive totals by filtering the already-scoped month transactions
   const totalIncome  = transactions.filter(t => t.type === 'income' ).reduce((s, t) => s + t.amount, 0);
   const totalExpense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
   const balance = totalIncome - totalExpense;
 
+  // Savings rate as a percentage of income; guard against division by zero
   const savingsRate = totalIncome > 0 ? ((balance / totalIncome) * 100).toFixed(0) : 0;
 
   return (

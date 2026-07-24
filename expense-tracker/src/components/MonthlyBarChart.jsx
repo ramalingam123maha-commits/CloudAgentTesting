@@ -1,3 +1,4 @@
+// Grouped bar chart comparing income vs expenses across the last 6 months
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -6,8 +7,10 @@ import {
 } from 'chart.js';
 import { addMonths, currentMonthKey, monthLabel } from '../utils.js';
 
+// Register Chart.js components needed for a bar chart
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
+// Returns an array of 6 "YYYY-MM" keys ending at the current month
 function last6Months() {
   const cur = currentMonthKey();
   return Array.from({ length: 6 }, (_, i) => addMonths(cur, i - 5));
@@ -16,6 +19,7 @@ function last6Months() {
 export default function MonthlyBarChart({ transactions }) {
   const months = last6Months();
 
+  // For each of the 6 months, sum income and expenses separately
   const totals = months.map(mk => {
     const txs = transactions.filter(t => t.date.slice(0, 7) === mk);
     return {
